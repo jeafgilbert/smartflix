@@ -6,7 +6,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
-    "test": "jest",
+    "test": "jest --coverage",
     "lint": "tslint -p \".\" -t stylish"
   },
   "dependencies": {
@@ -17,14 +17,17 @@
     "@babel/core": "^7.11.4",
     "@babel/runtime": "^7.11.2",
     "@react-native-community/eslint-config": "^2.0.0",
+    "@types/jest": "^26.0.10",
     "@types/react": "^16.9.48",
     "@types/react-native": "^0.63.11",
+    "@types/react-test-renderer": "^16.9.3",
     "babel-jest": "^26.3.0",
     "eslint": "^7.7.0",
     "jest": "^26.4.2",
     "metro-react-native-babel-preset": "^0.63.0",
     "react-native-typescript-transformer": "^1.2.13",
-    "react-test-renderer": "16.13.1",
+    "react-test-renderer": "^16.13.1",
+    "ts-jest": "^26.3.0",
     "tslint": "^6.1.3",
     "tslint-eslint-rules": "^5.4.0",
     "tslint-react": "^5.0.0",
@@ -32,6 +35,18 @@
     "typescript": "^4.0.2"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/src/.*\\.(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   }
 }
