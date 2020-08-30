@@ -1,26 +1,27 @@
 import React, { FC, useContext } from 'react'
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
-
+import { StyleSheet, Text, View } from 'react-native'
 import ThemeContext from '../contexts/ThemeContext'
 
-const Home: FC = () => {
+const Settings: FC = () => {
   const { theme } = useContext(ThemeContext)
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <ScrollView style={styles.body}>
-      </ScrollView>
+      <Text>Settings</Text>
     </View>
   )
 }
 
-export default Home
+export default Settings
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  body: {
-    flexGrow: 1,
+  logo: {
+    width: 200,
+    height: 40,
   },
 })

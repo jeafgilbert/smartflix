@@ -1,12 +1,13 @@
-import React, { FunctionComponent, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import Board from './screens/Board'
 import Splash from './screens/Splash'
+import { ThemeProvider } from './providers/ThemeProvider'
 
 const MainStack = createStackNavigator();
 
-const App: FunctionComponent = () => {
+const App: FC = () => {
   const [isInitializing, setIsInitializing] = useState(true);
 
   useEffect(() => {
@@ -16,15 +17,17 @@ const App: FunctionComponent = () => {
   })
 
   return (
-    <NavigationContainer>
-      <MainStack.Navigator screenOptions={{ headerShown: false }}>
-        {
-          isInitializing
-            ? <MainStack.Screen name="SplashScreen" component={Splash} />
-            : <MainStack.Screen name="BoardScreen" component={Board} />
-        }
-      </MainStack.Navigator>
-    </NavigationContainer>
+    <ThemeProvider>
+      <NavigationContainer>
+        <MainStack.Navigator screenOptions={{ headerShown: false }}>
+          {
+            isInitializing
+              ? <MainStack.Screen name="SplashScreen" component={Splash} />
+              : <MainStack.Screen name="BoardScreen" component={Board} />
+          }
+        </MainStack.Navigator>
+      </NavigationContainer>
+    </ThemeProvider>
   );
 }
 
