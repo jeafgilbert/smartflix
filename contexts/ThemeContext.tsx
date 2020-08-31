@@ -5,21 +5,23 @@ interface Theme {
   bottomTabBackground: string,
   bottomTabTintColor: string,
   bottomTabTintColorActive: string,
-  color: string
+  color: string,
+  modalBackground: string
 }
 
 interface ThemeContext {
   theme: Theme,
-  toggleTheme: (() => void)
+  toggleTheme: () => void
 }
 
 // Light Theme
 export const lightTheme = {
-  background: '#fff',
-  bottomTabBackground: '#fff',
+  background: '#f0f0f0',
+  bottomTabBackground: '#f0f0f0',
   bottomTabTintColor: '#999',
   bottomTabTintColorActive: '#111',
   color: '#111',
+  modalBackground: '#fff',
 }
 
 // Dark Theme
@@ -29,6 +31,7 @@ export const darkTheme = {
   bottomTabTintColor: '#aaa',
   bottomTabTintColorActive: '#fff',
   color: '#fff',
+  modalBackground: '#404040',
 }
 
 const ThemeContext = createContext<ThemeContext>({

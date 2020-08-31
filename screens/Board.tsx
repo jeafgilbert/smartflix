@@ -1,8 +1,10 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import React, { FC, useContext, useState } from 'react'
-import { Animated, Dimensions, Image, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Animated, Image, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import EntypoIcon from 'react-native-vector-icons/Entypo'
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import Switch from '../components/Switch'
 import ThemeContext from '../contexts/ThemeContext'
 import Home from './Home'
 
@@ -10,7 +12,7 @@ const Tab = createBottomTabNavigator()
 const menuHeight = 200
 
 const Board: FC = () => {
-  const { theme } = useContext(ThemeContext)
+  const { theme, toggleTheme } = useContext(ThemeContext)
   const [offsetY, setOffsetY] = useState(new Animated.Value(0))
   const [opacityAnim, setOpacityAnim] = useState(new Animated.Value(0))
   const [isMenuShown, setIsMenuShown] = useState(false)
@@ -44,8 +46,13 @@ const Board: FC = () => {
           <View style={styles.menuOverlayClickableInner}></View>
         </TouchableWithoutFeedback>
       </Animated.View>
-      <Animated.View style={[styles.menuWrap, { transform: [{ translateY: offsetY }] }]}>
-        <Text>Menu Item</Text>
+      <Animated.View style={[styles.menuWrap, { transform: [{ translateY: offsetY }], backgroundColor: theme.modalBackground }]}>
+        <View style={styles.menuItem}>
+          <View style={styles.menuItemLeft}>
+            <EntypoIcon name='moon' size={24} color={theme.color} style={styles.menuItemIcon} /><Text style={[styles.menuItemText, { color: theme.color }]}>Mode Gelap</Text>
+          </View>
+          <Switch onToggle={toggleTheme} />
+        </View>
       </Animated.View>
       <View style={styles.headerBar}>
         <Image style={styles.logo} source={require('../assets/images/logo-pink.png')}></Image>
@@ -146,9 +153,24 @@ const styles = StyleSheet.create({
     zIndex: 9999,
     top: '100%',
     paddingVertical: 28,
-    backgroundColor: '#fff',
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    paddingHorizontal: 20,
+  },
+  menuItemLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  menuItemIcon: {
+    marginRight: 12,
+  },
+  menuItemText: {
+    fontSize: 18,
   },
   headerBar: {
     width: '100%',
