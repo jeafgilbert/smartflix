@@ -4,7 +4,7 @@ import { RestLink } from 'apollo-link-rest'
 import gql from 'graphql-tag'
 import React, { FC, useContext, useEffect, useState } from 'react'
 import { ApolloProvider } from 'react-apollo'
-import { FlatList, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Image, StyleSheet, Text, View } from 'react-native'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import ThemeContext from '../contexts/ThemeContext'
 
@@ -65,7 +65,7 @@ const query = gql`
   }
 `
 
-const Home: FC = () => {
+const Live: FC = () => {
   const { theme } = useContext(ThemeContext)
   const [activeCategory, _setActiveCategory] = useState<string>('movies')
   const [nowPlayingMovies, setNowPlayingMovies] = useState<Movie[]>([])
@@ -114,8 +114,7 @@ const Home: FC = () => {
               data={nowPlayingMovies}
               renderItem={({ item }) => (
                 <View style={styles.filmWrap}>
-                  <Image source={{ uri: 'http://image.tmdb.org/t/p/w342/' + item.poster_path }} style={styles.filmImage} />
-                  <Text style={[styles.filmNameText, { color: theme.color }]}>{item.title}</Text>
+                  <Image source={item.poster_path ? { uri: 'http://image.tmdb.org/t/p/w342/' + item.poster_path } : require('../assets/images/image-default.png')} style={styles.filmImage} />
                 </View>
               )}
             />
@@ -125,7 +124,7 @@ const Home: FC = () => {
               data={onTheAirTvShows}
               renderItem={({ item }) => (
                 <View style={styles.filmWrap}>
-                  <Image source={{ uri: 'http://image.tmdb.org/t/p/w342/' + item.poster_path }} style={styles.filmImage} />
+                  <Image source={item.poster_path ? { uri: 'http://image.tmdb.org/t/p/w342/' + item.poster_path } : require('../assets/images/image-default.png')} style={styles.filmImage} />
                   <Text style={[styles.filmNameText, { color: theme.color }]}>{item.title}</Text>
                 </View>
               )}
@@ -136,7 +135,7 @@ const Home: FC = () => {
   )
 }
 
-export default Home
+export default Live
 
 const styles = StyleSheet.create({
   container: {

@@ -10,6 +10,7 @@ import Home from './Home'
 import Live from './Live'
 import PopularPeople from './PopularPeople'
 import Saved from './Saved'
+import Search from './Search'
 
 const Tab = createBottomTabNavigator()
 const menuHeight = 200
@@ -58,6 +59,7 @@ const Board: FC = () => {
         </View>
       </Animated.View>
       <View style={styles.headerBar}>
+        <Image style={styles.headerBg} source={require('../assets/images/header-bg.png')} />
         <Image style={styles.logo} source={require('../assets/images/logo-pink.png')}></Image>
         <TouchableOpacity style={styles.menuButton} onPress={toggleMenu}>
           <Icon name='menu' size={32} color={theme.darkTintColor} />
@@ -105,7 +107,7 @@ const Board: FC = () => {
         />
         <Tab.Screen
           name='Search'
-          component={Home}
+          component={Search}
           options={{
             tabBarLabel: 'Cari',
             tabBarIcon: ({ color, size }) => (
@@ -185,6 +187,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 10,
     paddingHorizontal: 12,
+  },
+  headerBg: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    left: 0,
+    height: 100,
   },
   menuButton: {
     paddingVertical: 2,

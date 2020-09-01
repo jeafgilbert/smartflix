@@ -158,7 +158,7 @@ const Home: FC = () => {
                   {
                     !randomMovieCover
                       ? null
-                      : <Image style={styles.coverImage} source={{ uri: 'http://image.tmdb.org/t/p/w780/' + randomMovieCover?.poster_path }} />
+                      : <Image style={styles.coverImage} source={randomMovieCover?.poster_path ? { uri: 'http://image.tmdb.org/t/p/w780/' + randomMovieCover?.poster_path } : require('../assets/images/image-default.png')} />
                   }
                   <Image style={styles.coverImageOverlay} source={require('../assets/images/cover-image-overlay.png')} />
                 </View>
@@ -184,7 +184,7 @@ const Home: FC = () => {
                         popularMovies.map((movie: Movie, key: number) => {
                           return (
                             <View key={key} style={styles.movieWrap}>
-                              <Image source={{ uri: 'http://image.tmdb.org/t/p/w185/' + movie.poster_path }} style={styles.movieImage} />
+                              <Image source={movie.poster_path ? { uri: 'http://image.tmdb.org/t/p/w185/' + movie.poster_path } : require('../assets/images/image-default.png')} style={styles.movieImage} />
                             </View>
                           )
                         })
@@ -224,7 +224,7 @@ const Home: FC = () => {
                         topRatedTvShows.map((movie: Movie, key: number) => {
                           return (
                             <View key={key} style={styles.movieWrap}>
-                              <Image source={{ uri: 'http://image.tmdb.org/t/p/w185/' + movie.poster_path }} style={styles.movieImage} />
+                              <Image source={movie.poster_path ? { uri: 'http://image.tmdb.org/t/p/w185/' + movie.poster_path } : require('../assets/images/image-default.png')} style={styles.movieImage} />
                             </View>
                           )
                         })
@@ -238,7 +238,7 @@ const Home: FC = () => {
                         popularTvShows.map((movie: Movie, key: number) => {
                           return (
                             <View key={key} style={styles.movieWrap}>
-                              <Image source={{ uri: 'http://image.tmdb.org/t/p/w185/' + movie.poster_path }} style={styles.movieImage} />
+                              <Image source={movie.poster_path ? { uri: 'http://image.tmdb.org/t/p/w185/' + movie.poster_path } : require('../assets/images/image-default.png')} style={styles.movieImage} />
                             </View>
                           )
                         })
@@ -252,7 +252,7 @@ const Home: FC = () => {
                         airingTodayTvShows.map((movie: Movie, key: number) => {
                           return (
                             <View key={key} style={styles.movieWrap}>
-                              <Image source={{ uri: 'http://image.tmdb.org/t/p/w185/' + movie.poster_path }} style={styles.movieImage} />
+                              <Image source={movie.poster_path ? { uri: 'http://image.tmdb.org/t/p/w185/' + movie.poster_path } : require('../assets/images/image-default.png')} style={styles.movieImage} />
                             </View>
                           )
                         })

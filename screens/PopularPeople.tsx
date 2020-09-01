@@ -4,7 +4,7 @@ import { RestLink } from 'apollo-link-rest'
 import gql from 'graphql-tag'
 import React, { FC, useContext, useEffect, useState } from 'react'
 import { ApolloProvider } from 'react-apollo'
-import { FlatList, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Image, StyleSheet, Text, View } from 'react-native'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import ThemeContext from '../contexts/ThemeContext'
 
@@ -54,7 +54,7 @@ const query = gql`
   }
 `
 
-const Home: FC = () => {
+const PopularPeople: FC = () => {
   const { theme } = useContext(ThemeContext)
   const [popularPeople, setPopularPeople] = useState<Person[]>([])
 
@@ -75,7 +75,7 @@ const Home: FC = () => {
           data={popularPeople}
           renderItem={({ item }) => (
             <View style={styles.personWrap}>
-              <Image source={{ uri: 'http://image.tmdb.org/t/p/w185/' + item.profile_path }} style={styles.personImage} />
+              <Image source={item.profile_path ? { uri: 'http://image.tmdb.org/t/p/w185/' + item.profile_path } : require('../assets/images/image-default.png')} style={styles.personImage} />
               <Text style={[styles.personNameText, { color: theme.color }]}>{item.name}</Text>
             </View>
           )}
@@ -85,7 +85,7 @@ const Home: FC = () => {
   )
 }
 
-export default Home
+export default PopularPeople
 
 const styles = StyleSheet.create({
   container: {
