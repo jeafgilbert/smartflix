@@ -6,7 +6,10 @@ interface Theme {
   tintColor: string,
   tintColorActive: string,
   color: string,
-  modalBackground: string
+  modalBackground: string,
+  darkTintColor: string,
+  darkTintColorInactive: string,
+  darkTintColorActive: string,
 }
 
 interface ThemeContext {
@@ -22,6 +25,9 @@ export const lightTheme = {
   tintColorActive: '#111',
   color: '#111',
   modalBackground: '#fff',
+  darkTintColor: '#fff',
+  darkTintColorInactive: '#aaa',
+  darkTintColorActive: '#fff',
 }
 
 // Dark Theme
@@ -32,10 +38,13 @@ export const darkTheme = {
   tintColorActive: '#fff',
   color: '#fff',
   modalBackground: '#404040',
+  darkTintColor: '#fff',
+  darkTintColorInactive: '#aaa',
+  darkTintColorActive: '#fff',
 }
 
 const ThemeContext = createContext<ThemeContext>({
-  theme: lightTheme,
+  theme: darkTheme,
   toggleTheme: () => {},
 })
 

@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import ThemeContext, { darkTheme, lightTheme } from '../contexts/ThemeContext'
 
 export const ThemeProvider: React.FC = ({ children }) => {
-  const [themeName, setThemeName] = useState('light')
-  const [activeTheme, setActiveTheme] = useState(lightTheme)
+  const [themeName, setThemeName] = useState('dark')
+  const [activeTheme, setActiveTheme] = useState(darkTheme)
 
   const themeContext = React.useMemo(
     () => ({

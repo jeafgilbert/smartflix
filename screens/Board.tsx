@@ -7,6 +7,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import Switch from '../components/Switch'
 import ThemeContext from '../contexts/ThemeContext'
 import Home from './Home'
+import Live from './Live'
+import PopularPeople from './PopularPeople'
+import Saved from './Saved'
 
 const Tab = createBottomTabNavigator()
 const menuHeight = 200
@@ -51,13 +54,13 @@ const Board: FC = () => {
           <View style={styles.menuItemLeft}>
             <EntypoIcon name='moon' size={24} color={theme.color} style={styles.menuItemIcon} /><Text style={[styles.menuItemText, { color: theme.color }]}>Mode Gelap</Text>
           </View>
-          <Switch onToggle={toggleTheme} />
+          <Switch onToggle={toggleTheme} on={true} />
         </View>
       </Animated.View>
       <View style={styles.headerBar}>
         <Image style={styles.logo} source={require('../assets/images/logo-pink.png')}></Image>
-        <TouchableOpacity onPress={toggleMenu}>
-          <Icon name='menu' size={32} color={theme.color} />
+        <TouchableOpacity style={styles.menuButton} onPress={toggleMenu}>
+          <Icon name='menu' size={32} color={theme.darkTintColor} />
         </TouchableOpacity>
       </View>
       <Tab.Navigator
@@ -82,7 +85,7 @@ const Board: FC = () => {
         />
         <Tab.Screen
           name='People'
-          component={Home}
+          component={PopularPeople}
           options={{
             tabBarLabel: 'Populer',
             tabBarIcon: ({ color, size }) => (
@@ -91,8 +94,8 @@ const Board: FC = () => {
           }}
         />
         <Tab.Screen
-          name='Profile'
-          component={Home}
+          name='Live'
+          component={Live}
           options={{
             tabBarLabel: 'Langsung',
             tabBarIcon: ({ color, size }) => (
@@ -111,8 +114,8 @@ const Board: FC = () => {
           }}
         />
         <Tab.Screen
-          name='Messages'
-          component={Home}
+          name='Saved'
+          component={Saved}
           options={{
             tabBarLabel: 'Tersimpan',
             tabBarIcon: ({ color, size }) => (
@@ -182,6 +185,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 10,
     paddingHorizontal: 12,
+  },
+  menuButton: {
+    paddingVertical: 2,
+    paddingHorizontal: 10,
+    backgroundColor: '#000',
   },
   logo: {
     width: 150,
