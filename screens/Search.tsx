@@ -2,20 +2,31 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloClient } from 'apollo-client'
 import { RestLink } from 'apollo-link-rest'
 import gql from 'graphql-tag'
-import React, { FC, useContext, useEffect, useState } from 'react'
-import { ApolloProvider } from 'react-apollo'
-import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TextInput, NativeSyntheticEvent, TextInputChangeEventData, View } from 'react-native'
-import { TouchableWithoutFeedback, TouchableOpacity } from 'react-native-gesture-handler'
+import React, { FC, useContext, useState } from 'react'
+import { ApolloProvider, graphql } from 'react-apollo'
+import { ActivityIndicator, FlatList, Image, Keyboard, NativeSyntheticEvent, StyleSheet, Text, TextInput, TextInputChangeEventData, View } from 'react-native'
+import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import ThemeContext from '../contexts/ThemeContext'
 
 interface SearchResult {
   media_type: string,
   id: number,
-  title?: string,
-  name?: number,
-  overview?: string,
+  popularity?: number,
+  vote_count?: number,
+  video?: boolean,
   poster_path?: string,
+  adult?: boolean,
   backdrop_path?: string,
+  original_language?: string,
+  original_title?: string,
+  genre_ids?: string[],
+  title?: string,
+  vote_average?: number,
+  overview?: string,
+  release_date?: string,
+  first_air_date?: string,
+  name?: string,
+  origin_country?: string[],
   profile_path?: string,
 }
 
@@ -25,9 +36,19 @@ const restLink = new RestLink({ uri: 'https://api.themoviedb.org/3/' })
 const client = new ApolloClient({
   link: restLink,
   cache: new InMemoryCache(),
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'cache-and-network',
+    },
+  },
 })
 
-const Search: FC = () => {
+interface Props {
+  route: any
+  navigation: any,
+}
+
+const Search: FC<Props> = ({ route, navigation }) => {
   const { theme } = useContext(ThemeContext)
   const [searchResults, setSearchResults] = useState<SearchResult[]>([])
   const [keywords, setKeywords] = useState<string>('')
@@ -41,6 +62,7 @@ const Search: FC = () => {
 
     setSearchResults([])
     setIsSearching(true)
+    Keyboard.dismiss()
 
     const query = gql`
       query searchResults {
@@ -54,6 +76,7 @@ const Search: FC = () => {
     `
 
     client.query({ query }).then(response => {
+      client.resetStore()
       setSearchResults(response.data.searchResults.results)
 
       setIsSearching(false)
@@ -64,6 +87,32 @@ const Search: FC = () => {
   const onKeywordsChange = (e: NativeSyntheticEvent<TextInputChangeEventData>): void => {
     const value = e.nativeEvent.text
     setKeywords(value)
+  }
+
+  const goToMovie = (searchResult: SearchResult) => {
+    navigation.navigate('Movie', { movie: searchResult })
+  }
+
+  const goToTvShow = (searchResult: SearchResult) => {
+    navigation.navigate('TvShow', { tvShow: searchResult })
+  }
+
+  const goToPerson = (searchResult: SearchResult) => {
+    navigation.navigate('Person', { person: searchResult })
+  }
+
+  const goToDetailScreen = (mediaType: string, searchResult: SearchResult) => {
+    switch (mediaType) {
+      case 'movie':
+        goToMovie(searchResult)
+        break
+      case 'tv':
+        goToTvShow(searchResult)
+        break
+      case 'person':
+        goToPerson(searchResult)
+        break
+    }
   }
 
   return (
@@ -79,7 +128,7 @@ const Search: FC = () => {
           !isSearched
             ? null
             : isSearching
-              ? <ActivityIndicator color={theme.color} />
+              ? <ActivityIndicator style={styles.activityIndicator} size={32} color={theme.color} />
               : searchResults.length === 0
                 ? <Text style={[styles.emptyText, { color: theme.color }]}>- Hasil pencarian kosong -</Text>
                 : <FlatList
@@ -88,17 +137,17 @@ const Search: FC = () => {
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={({ item }) => {
                     const imagePath = item.media_type === 'person' ? item.profile_path : item.poster_path
-                    const title = item.media_type === 'person' ? item.name : item.title
+                    const title = item.media_type === 'person' ? (item.name ? item.name : '(Unamed)') : (item.title ? item.title : '(Untitled)')
                     const overview = item.overview ? item.overview.substr(0, 160) + ' ...' : ''
 
                     return (
-                      <View style={styles.resultWrap}>
+                      <TouchableWithoutFeedback onPress={() => goToDetailScreen(item.media_type, item)} style={styles.resultWrap}>
                         <Image source={imagePath ? { uri: 'http://image.tmdb.org/t/p/w185/' + imagePath } : require('../assets/images/image-default.png')} style={styles.resultImage} />
                         <View style={styles.resultDetailsWrap}>
                           <Text style={[styles.resultTitle, { color: theme.color }]}>{title}</Text>
                           <Text style={[styles.resultDesc, { color: theme.color }]}>{overview}</Text>
                         </View>
-                      </View>
+                      </TouchableWithoutFeedback>
                     )
                   }}
                 />
@@ -152,6 +201,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff',
   },
+  activityIndicator: {
+    marginTop: 30,
+  },
   emptyText: {
     marginTop: 50,
     textAlign: 'center',
@@ -170,7 +222,7 @@ const styles = StyleSheet.create({
     height: 150,
   },
   resultDetailsWrap: {
-    marginLeft: 12,
+    marginLeft: 16,
   },
   resultTitle: {
     fontSize: 20,

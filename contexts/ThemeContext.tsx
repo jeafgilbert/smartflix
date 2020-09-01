@@ -1,6 +1,7 @@
 import { createContext } from 'react'
 
 interface Theme {
+  name: string,
   background: string,
   bottomTabBackground: string,
   tintColor: string,
@@ -19,6 +20,7 @@ interface ThemeContext {
 
 // Light Theme
 export const lightTheme = {
+  name: 'light',
   background: '#f0f0f0',
   bottomTabBackground: '#f0f0f0',
   tintColor: '#999',
@@ -32,6 +34,7 @@ export const lightTheme = {
 
 // Dark Theme
 export const darkTheme = {
+  name: 'dark',
   background: '#111',
   bottomTabBackground: '#111',
   tintColor: '#aaa',

@@ -1,3 +1,4 @@
+import { NavigationProp, NavigationState } from '@react-navigation/native'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloClient } from 'apollo-client'
 import { RestLink } from 'apollo-link-rest'
@@ -9,35 +10,40 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import ThemeContext from '../contexts/ThemeContext'
 
 interface Movie {
-  popularity?: number,
-  vote_count?: number,
-  video?: boolean,
-  poster_path?: string,
+  popularity: number,
+  vote_count: number,
+  video: boolean,
+  poster_path: string,
   id: number,
-  adult?: boolean,
-  backdrop_path?: string,
-  original_language?: string,
-  original_title?: string,
-  genre_ids?: string[],
+  adult: boolean,
+  backdrop_path: string,
+  original_language: string,
+  original_title: string,
+  genre_ids: string[],
   title: string,
-  vote_average?: number,
-  overview?: string,
-  release_date?: string
+  vote_average: number,
+  overview: string,
+  release_date: string
 }
 
 interface TvShow {
-  original_name: string,
-  genre_ids: number[],
-  name: string,
-  popularity: number,
-  origin_country: string[],
-  vote_count: number,
-  first_air_date: string,
-  backdrop_path: string,
-  original_language: string,
+  backdrop_path?: string,
+  first_air_date?: string,
+  genre_ids?: number[],
   id: number,
-  vote_average: number,
-  overview: string
+  name?: string,
+  origin_country?: string[],
+  original_language?: string,
+  original_name?: string,
+  overview?: string,
+  popularity?: number,
+  poster_path?: string,
+  vote_average?: number,
+  vote_count?: number
+}
+
+interface Props {
+  navigation: any
 }
 
 const restLink = new RestLink({ uri: 'https://api.themoviedb.org/3/' })
@@ -94,7 +100,7 @@ const getRandomItem = (items: any): any => {
   return items[randomIndex]
 }
 
-const Home: FC = () => {
+const Home: FC<Props> = ({ navigation }) => {
   const { theme } = useContext(ThemeContext)
   const [activeCategory, _setActiveCategory] = useState<string>('movies')
 
@@ -139,6 +145,14 @@ const Home: FC = () => {
     _setActiveCategory(category)
   }
 
+  const goToMovie = (movie: Movie) => {
+    navigation.navigate('Movie', { movie: movie })
+  }
+
+  const goToTvShow = (tvShow: TvShow) => {
+    navigation.navigate('TvShow', { tvShow: tvShow })
+  }
+
   return (
     <ApolloProvider client={client}>
       <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -169,9 +183,9 @@ const Home: FC = () => {
                       {
                         topRatedMovies.map((movie: Movie, key: number) => {
                           return (
-                            <View key={key} style={styles.movieWrap}>
+                            <TouchableWithoutFeedback onPress={() => goToMovie(movie)} key={key} style={styles.movieWrap}>
                               <Image source={{ uri: 'http://image.tmdb.org/t/p/w185/' + movie.poster_path }} style={styles.movieImage} />
-                            </View>
+                            </TouchableWithoutFeedback>
                           )
                         })
                       }
@@ -183,9 +197,9 @@ const Home: FC = () => {
                       {
                         popularMovies.map((movie: Movie, key: number) => {
                           return (
-                            <View key={key} style={styles.movieWrap}>
+                            <TouchableWithoutFeedback onPress={() => goToMovie(movie)} key={key} style={styles.movieWrap}>
                               <Image source={movie.poster_path ? { uri: 'http://image.tmdb.org/t/p/w185/' + movie.poster_path } : require('../assets/images/image-default.png')} style={styles.movieImage} />
-                            </View>
+                            </TouchableWithoutFeedback>
                           )
                         })
                       }
@@ -197,9 +211,9 @@ const Home: FC = () => {
                       {
                         upcomingMovies.map((movie: Movie, key: number) => {
                           return (
-                            <View key={key} style={styles.movieWrap}>
+                            <TouchableWithoutFeedback onPress={() => goToMovie(movie)} key={key} style={styles.movieWrap}>
                               <Image source={{ uri: 'http://image.tmdb.org/t/p/w185/' + movie.poster_path }} style={styles.movieImage} />
-                            </View>
+                            </TouchableWithoutFeedback>
                           )
                         })
                       }
@@ -221,11 +235,11 @@ const Home: FC = () => {
                     <Text style={[styles.headingText, { color: theme.color }]}>Peringkat Teratas</Text>
                     <ScrollView style={styles.contentScroll} horizontal={true}>
                       {
-                        topRatedTvShows.map((movie: Movie, key: number) => {
+                        topRatedTvShows.map((tvShow: TvShow, key: number) => {
                           return (
-                            <View key={key} style={styles.movieWrap}>
-                              <Image source={movie.poster_path ? { uri: 'http://image.tmdb.org/t/p/w185/' + movie.poster_path } : require('../assets/images/image-default.png')} style={styles.movieImage} />
-                            </View>
+                            <TouchableWithoutFeedback onPress={() => goToTvShow(tvShow)} key={key} style={styles.movieWrap}>
+                              <Image source={tvShow.poster_path ? { uri: 'http://image.tmdb.org/t/p/w185/' + tvShow.poster_path } : require('../assets/images/image-default.png')} style={styles.movieImage} />
+                            </TouchableWithoutFeedback>
                           )
                         })
                       }
@@ -235,11 +249,11 @@ const Home: FC = () => {
                     <Text style={[styles.headingText, { color: theme.color }]}>Populer</Text>
                     <ScrollView style={styles.contentScroll} horizontal={true}>
                       {
-                        popularTvShows.map((movie: Movie, key: number) => {
+                        popularTvShows.map((tvShow: TvShow, key: number) => {
                           return (
-                            <View key={key} style={styles.movieWrap}>
-                              <Image source={movie.poster_path ? { uri: 'http://image.tmdb.org/t/p/w185/' + movie.poster_path } : require('../assets/images/image-default.png')} style={styles.movieImage} />
-                            </View>
+                            <TouchableWithoutFeedback onPress={() => goToTvShow(tvShow)} key={key} style={styles.movieWrap}>
+                              <Image source={tvShow.poster_path ? { uri: 'http://image.tmdb.org/t/p/w185/' + tvShow.poster_path } : require('../assets/images/image-default.png')} style={styles.movieImage} />
+                            </TouchableWithoutFeedback>
                           )
                         })
                       }
@@ -249,11 +263,11 @@ const Home: FC = () => {
                     <Text style={[styles.headingText, { color: theme.color }]}>Tayang Hari Ini</Text>
                     <ScrollView style={styles.contentScroll} horizontal={true}>
                       {
-                        airingTodayTvShows.map((movie: Movie, key: number) => {
+                        airingTodayTvShows.map((tvShow: TvShow, key: number) => {
                           return (
-                            <View key={key} style={styles.movieWrap}>
-                              <Image source={movie.poster_path ? { uri: 'http://image.tmdb.org/t/p/w185/' + movie.poster_path } : require('../assets/images/image-default.png')} style={styles.movieImage} />
-                            </View>
+                            <TouchableWithoutFeedback onPress={() => goToTvShow(tvShow)} key={key} style={styles.movieWrap}>
+                              <Image source={tvShow.poster_path ? { uri: 'http://image.tmdb.org/t/p/w185/' + tvShow.poster_path } : require('../assets/images/image-default.png')} style={styles.movieImage} />
+                            </TouchableWithoutFeedback>
                           )
                         })
                       }

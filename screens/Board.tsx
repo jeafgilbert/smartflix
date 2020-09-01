@@ -6,11 +6,11 @@ import EntypoIcon from 'react-native-vector-icons/Entypo'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import Switch from '../components/Switch'
 import ThemeContext from '../contexts/ThemeContext'
-import Home from './Home'
-import Live from './Live'
-import PopularPeople from './PopularPeople'
+import HomeNav from '../navigations/HomeNav'
+import LiveNav from '../navigations/LiveNav'
+import PopularPeopleNav from '../navigations/PopularPeopleNav'
+import SearchNav from '../navigations/SearchNav'
 import Saved from './Saved'
-import Search from './Search'
 
 const Tab = createBottomTabNavigator()
 const menuHeight = 200
@@ -77,7 +77,7 @@ const Board: FC = () => {
       >
         <Tab.Screen
           name='Home'
-          component={Home}
+          component={HomeNav}
           options={{
             tabBarLabel: 'Beranda',
             tabBarIcon: ({ color, size }) => (
@@ -87,7 +87,7 @@ const Board: FC = () => {
         />
         <Tab.Screen
           name='People'
-          component={PopularPeople}
+          component={PopularPeopleNav}
           options={{
             tabBarLabel: 'Populer',
             tabBarIcon: ({ color, size }) => (
@@ -97,7 +97,7 @@ const Board: FC = () => {
         />
         <Tab.Screen
           name='Live'
-          component={Live}
+          component={LiveNav}
           options={{
             tabBarLabel: 'Langsung',
             tabBarIcon: ({ color, size }) => (
@@ -107,7 +107,7 @@ const Board: FC = () => {
         />
         <Tab.Screen
           name='Search'
-          component={Search}
+          component={SearchNav}
           options={{
             tabBarLabel: 'Cari',
             tabBarIcon: ({ color, size }) => (
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     top: 0,
     right: 0,
     left: 0,
-    height: 100,
+    height: 50,
   },
   menuButton: {
     paddingVertical: 2,

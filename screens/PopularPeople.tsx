@@ -4,7 +4,7 @@ import { RestLink } from 'apollo-link-rest'
 import gql from 'graphql-tag'
 import React, { FC, useContext, useEffect, useState } from 'react'
 import { ApolloProvider } from 'react-apollo'
-import { FlatList, Image, StyleSheet, Text, View } from 'react-native'
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import ThemeContext from '../contexts/ThemeContext'
 
@@ -35,6 +35,10 @@ interface Person {
   known_for?: Movie[]
 }
 
+interface Props {
+  navigation: any
+}
+
 const restLink = new RestLink({ uri: 'https://api.themoviedb.org/3/' })
 
 // setup your client
@@ -54,7 +58,7 @@ const query = gql`
   }
 `
 
-const PopularPeople: FC = () => {
+const PopularPeople: FC<Props> = ({ navigation }) => {
   const { theme } = useContext(ThemeContext)
   const [popularPeople, setPopularPeople] = useState<Person[]>([])
 
@@ -65,21 +69,30 @@ const PopularPeople: FC = () => {
     })
   }, [])
 
+  const goToPerson = (person: Person) => {
+    navigation.navigate('Person', { person: person })
+  }
+
   return (
     <ApolloProvider client={client}>
       <View style={[styles.container, { backgroundColor: theme.background }]}>
-        <Text style={[styles.headingText, { color: theme.color }]}>Artis Populer</Text>
-        <FlatList
-          contentContainerStyle={styles.mainList}
-          numColumns={4}
-          data={popularPeople}
-          renderItem={({ item }) => (
-            <View style={styles.personWrap}>
-              <Image source={item.profile_path ? { uri: 'http://image.tmdb.org/t/p/w185/' + item.profile_path } : require('../assets/images/image-default.png')} style={styles.personImage} />
-              <Text style={[styles.personNameText, { color: theme.color }]}>{item.name}</Text>
-            </View>
-          )}
-        />
+        <ScrollView contentContainerStyle={styles.mainScroll}>
+          <Text style={[styles.headingText, { color: theme.color }]}>Artis Populer</Text>
+          <View style={styles.mainList}>
+            {
+              popularPeople.map((person: Person, key: number) => {
+                return (
+                  <View style={styles.personWrap} key={key}>
+                    <TouchableWithoutFeedback onPress={() => goToPerson(person)}>
+                      <Image source={person.profile_path ? { uri: 'http://image.tmdb.org/t/p/w185/' + person.profile_path } : require('../assets/images/image-default.png')} style={styles.personImage} />
+                      <Text style={[styles.personNameText, { color: theme.color }]}>{person.name}</Text>
+                    </TouchableWithoutFeedback>
+                  </View>
+                )
+              })
+            }
+          </View>
+        </ScrollView>
       </View>
     </ApolloProvider>
   )
@@ -90,7 +103,6 @@ export default PopularPeople
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 80,
     paddingHorizontal: 12,
   },
   headingText: {
@@ -98,12 +110,18 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
-  mainList: {
+  mainScroll: {
+    flexGrow: 1,
+    paddingTop: 70,
     paddingBottom: 40,
+  },
+  mainList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     marginHorizontal: -4,
   },
   personWrap: {
-    width: '25%',
+    width: '33%',
     paddingVertical: 8,
     paddingHorizontal: 4,
   },
@@ -111,6 +129,7 @@ const styles = StyleSheet.create({
     height: 150,
   },
   personNameText: {
+    marginTop: 2,
     fontSize: 15,
     textAlign: 'center',
   },

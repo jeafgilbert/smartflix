@@ -4,7 +4,7 @@ import { RestLink } from 'apollo-link-rest'
 import gql from 'graphql-tag'
 import React, { FC, useContext, useEffect, useState } from 'react'
 import { ApolloProvider } from 'react-apollo'
-import { FlatList, Image, StyleSheet, Text, View } from 'react-native'
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import ThemeContext from '../contexts/ThemeContext'
 
@@ -26,18 +26,19 @@ interface Movie {
 }
 
 interface TvShow {
-  original_name: string,
-  genre_ids: number[],
-  name: string,
-  popularity: number,
-  origin_country: string[],
-  vote_count: number,
-  first_air_date: string,
-  backdrop_path: string,
-  original_language: string,
+  backdrop_path?: string,
+  first_air_date?: string,
+  genre_ids?: number[],
   id: number,
-  vote_average: number,
-  overview: string
+  name?: string,
+  origin_country?: string[],
+  original_language?: string,
+  original_name?: string,
+  overview?: string,
+  popularity?: number,
+  poster_path?: string,
+  vote_average?: number,
+  vote_count?: number
 }
 
 const restLink = new RestLink({ uri: 'https://api.themoviedb.org/3/' })
@@ -65,11 +66,16 @@ const query = gql`
   }
 `
 
-const Live: FC = () => {
+interface Props {
+  route: any
+  navigation: any,
+}
+
+const Live: FC<Props> = ({ route, navigation }) => {
   const { theme } = useContext(ThemeContext)
   const [activeCategory, _setActiveCategory] = useState<string>('movies')
   const [nowPlayingMovies, setNowPlayingMovies] = useState<Movie[]>([])
-  const [onTheAirTvShows, setOnTheAirTvShows] = useState<Movie[]>([])
+  const [onTheAirTvShows, setOnTheAirTvShows] = useState<TvShow[]>([])
 
   useEffect(() => {
     client.query({ query }).then(response => {
@@ -94,42 +100,54 @@ const Live: FC = () => {
     _setActiveCategory(category)
   }
 
+  const goToMovie = (movie: Movie) => {
+    navigation.navigate('Movie', { movie: movie })
+  }
+
+  const goToTvShow = (tvShow: TvShow) => {
+    navigation.navigate('TvShow', { tvShow: tvShow })
+  }
+
   return (
     <ApolloProvider client={client}>
       <View style={[styles.container, { backgroundColor: theme.background }]}>
-        <View style={styles.categoriesWrap}>
-          <TouchableWithoutFeedback onPress={() => toggleCategory('movies')} style={[styles.categoryButton, { borderColor: activeCategory === 'movies' ? theme.tintColorActive : theme.tintColor }]}>
-            <Text style={[styles.categoryButtonText, { color: activeCategory === 'movies' ? theme.tintColorActive : theme.tintColor }]}>Film</Text>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={() => toggleCategory('tv-shows')} style={[styles.categoryButton, { borderColor: activeCategory === 'tv-shows' ? theme.tintColorActive : theme.tintColor }]}>
-            <Text style={[styles.categoryButtonText, { color: activeCategory === 'tv-shows' ? theme.tintColorActive : theme.tintColor }]}>Acara TV</Text>
-          </TouchableWithoutFeedback>
-        </View>
-        <Text style={[styles.headingText, { color: theme.color }]}>Sedang Berlangsung</Text>
-        {
-          activeCategory === 'movies'
-            ? <FlatList
-              contentContainerStyle={styles.mainList}
-              numColumns={3}
-              data={nowPlayingMovies}
-              renderItem={({ item }) => (
-                <View style={styles.filmWrap}>
-                  <Image source={item.poster_path ? { uri: 'http://image.tmdb.org/t/p/w342/' + item.poster_path } : require('../assets/images/image-default.png')} style={styles.filmImage} />
-                </View>
-              )}
-            />
-            : <FlatList
-              contentContainerStyle={styles.mainList}
-              numColumns={3}
-              data={onTheAirTvShows}
-              renderItem={({ item }) => (
-                <View style={styles.filmWrap}>
-                  <Image source={item.poster_path ? { uri: 'http://image.tmdb.org/t/p/w342/' + item.poster_path } : require('../assets/images/image-default.png')} style={styles.filmImage} />
-                  <Text style={[styles.filmNameText, { color: theme.color }]}>{item.title}</Text>
-                </View>
-              )}
-            />
-        }
+        <ScrollView contentContainerStyle={styles.mainScroll}>
+          <View style={styles.categoriesWrap}>
+            <TouchableWithoutFeedback onPress={() => toggleCategory('movies')} style={[styles.categoryButton, { borderColor: activeCategory === 'movies' ? theme.tintColorActive : theme.tintColor }]}>
+              <Text style={[styles.categoryButtonText, { color: activeCategory === 'movies' ? theme.tintColorActive : theme.tintColor }]}>Film</Text>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => toggleCategory('tv-shows')} style={[styles.categoryButton, { borderColor: activeCategory === 'tv-shows' ? theme.tintColorActive : theme.tintColor }]}>
+              <Text style={[styles.categoryButtonText, { color: activeCategory === 'tv-shows' ? theme.tintColorActive : theme.tintColor }]}>Acara TV</Text>
+            </TouchableWithoutFeedback>
+          </View>
+          <Text style={[styles.headingText, { color: theme.color }]}>Sedang Berlangsung</Text>
+          <View style={styles.mainList}>
+            {
+              activeCategory === 'movies'
+                ?
+                nowPlayingMovies.map((movie: Movie, key: number) => {
+                  return (
+                    <View key={key} style={styles.filmWrap}>
+                      <TouchableWithoutFeedback onPress={() => goToMovie(movie)}>
+                        <Image source={movie.poster_path ? { uri: 'http://image.tmdb.org/t/p/w185/' + movie.poster_path } : require('../assets/images/image-default.png')} style={styles.filmImage} />
+                        <Text style={styles.liveText}>LIVE</Text>
+                      </TouchableWithoutFeedback>
+                    </View>
+                  )
+                })
+                : onTheAirTvShows.map((tvShow: TvShow, key: number) => {
+                  return (
+                    <View key={key} style={styles.filmWrap}>
+                      <TouchableWithoutFeedback onPress={() => goToTvShow(tvShow)}>
+                        <Image source={tvShow.poster_path ? { uri: 'http://image.tmdb.org/t/p/w185/' + tvShow.poster_path } : require('../assets/images/image-default.png')} style={styles.filmImage} />
+                        <Text style={styles.liveText}>LIVE</Text>
+                      </TouchableWithoutFeedback>
+                    </View>
+                  )
+                })
+            }
+          </View>
+        </ScrollView>
       </View>
     </ApolloProvider>
   )
@@ -140,11 +158,11 @@ export default Live
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 120,
     paddingHorizontal: 8,
   },
   mainScroll: {
     flexGrow: 1,
+    paddingTop: 120,
     paddingBottom: 40,
   },
   categoriesWrap: {
@@ -174,7 +192,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   mainList: {
-    paddingBottom: 40,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginHorizontal: -4,
   },
   filmWrap: {
     width: '33%',
