@@ -62,8 +62,8 @@ const Board: FC = () => {
       </View>
       <Tab.Navigator
         tabBarOptions={{
-          inactiveTintColor: theme.bottomTabTintColor,
-          activeTintColor: theme.bottomTabTintColorActive,
+          inactiveTintColor: theme.tintColor,
+          activeTintColor: theme.tintColorActive,
           inactiveBackgroundColor: theme.bottomTabBackground,
           activeBackgroundColor: theme.bottomTabBackground,
           tabStyle: { borderTopWidth: 0 },

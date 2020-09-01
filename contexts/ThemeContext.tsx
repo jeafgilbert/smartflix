@@ -3,8 +3,8 @@ import { createContext } from 'react'
 interface Theme {
   background: string,
   bottomTabBackground: string,
-  bottomTabTintColor: string,
-  bottomTabTintColorActive: string,
+  tintColor: string,
+  tintColorActive: string,
   color: string,
   modalBackground: string
 }
@@ -18,8 +18,8 @@ interface ThemeContext {
 export const lightTheme = {
   background: '#f0f0f0',
   bottomTabBackground: '#f0f0f0',
-  bottomTabTintColor: '#999',
-  bottomTabTintColorActive: '#111',
+  tintColor: '#999',
+  tintColorActive: '#111',
   color: '#111',
   modalBackground: '#fff',
 }
@@ -28,8 +28,8 @@ export const lightTheme = {
 export const darkTheme = {
   background: '#111',
   bottomTabBackground: '#111',
-  bottomTabTintColor: '#aaa',
-  bottomTabTintColorActive: '#fff',
+  tintColor: '#aaa',
+  tintColorActive: '#fff',
   color: '#fff',
   modalBackground: '#404040',
 }
