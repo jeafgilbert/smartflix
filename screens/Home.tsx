@@ -1,4 +1,3 @@
-import { NavigationProp, NavigationState } from '@react-navigation/native'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloClient } from 'apollo-client'
 import { RestLink } from 'apollo-link-rest'

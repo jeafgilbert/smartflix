@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react'
-import { Animated, StyleSheet, View } from 'react-native'
+import { Animated, StyleSheet } from 'react-native'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
 interface Props {
@@ -8,8 +8,8 @@ interface Props {
 }
 
 const Switch: FC<Props> = ({ onToggle, on }) => {
-  const [offsetX, setOffsetX] = useState(new Animated.Value(!on ? 0 : 22))
-  const [opacityAnim, setOpacityAnim] = useState(new Animated.Value(!on ? 0 : 1))
+  const [offsetX] = useState(new Animated.Value(!on ? 0 : 22))
+  const [opacityAnim] = useState(new Animated.Value(!on ? 0 : 1))
   const [isOn, setIsOn] = useState(on || false)
 
   const toggle = () => {

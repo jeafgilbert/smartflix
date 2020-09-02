@@ -17,8 +17,8 @@ const menuHeight = 200
 
 const Board: FC = () => {
   const { theme, toggleTheme } = useContext(ThemeContext)
-  const [offsetY, setOffsetY] = useState(new Animated.Value(0))
-  const [opacityAnim, setOpacityAnim] = useState(new Animated.Value(0))
+  const [offsetY] = useState(new Animated.Value(0))
+  const [opacityAnim] = useState(new Animated.Value(0))
   const [isMenuShown, setIsMenuShown] = useState(false)
 
   const toggleMenu = () => {
