@@ -22,7 +22,7 @@ To install Smartflix project in your machine, do these steps:
 
 ## Run Project
 
-To run your project, simply run `react-native run-android` from Terminal or `react-native run-ios` if your have iOS emulator.
+To run your project, simply run `react-native run-android` from Terminal or `react-native run-ios` if you have iOS emulator.
 
 
 ## Testing
